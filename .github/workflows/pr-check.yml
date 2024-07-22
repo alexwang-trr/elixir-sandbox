@@ -12,12 +12,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run Snyk Test
-        uses: docker://snyk/snyk:docker-latest
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          SNYK_ORG: ${{ secrets.SNYK_ORG }}
-        with:
-          args: sh -c "snyk test --org=${{ secrets.SNYK_ORG }} | tee snyk-output.log"
-      
-      - name: Display Snyk Test Results
-        run: cat snyk-output.log
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/project" \
+            -w /project \
+            -e SNYK_TOKEN=${{ secrets.SNYK_TOKEN }} \
+            snyk/snyk:docker-latest test --org=${{ secrets.SNYK_ORG }}
