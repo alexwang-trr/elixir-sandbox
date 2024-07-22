@@ -19,7 +19,6 @@ defmodule Example do
     # IO.puts(?a)
     a = 10
     b = 3
-    IO.puts("Hello world!")
     IO.puts(Integer.mod(b, a))
     :io.format("~.20f\n", [0.1])
     memberships = {:bronze, :silver}
