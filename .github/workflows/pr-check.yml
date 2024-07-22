@@ -17,4 +17,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           SNYK_ORG: ${{ secrets.SNYK_ORG }}
         with:
-          args: test --org=${{ secrets.SNYK_ORG }}
+          args: sh -c "snyk test --org=${{ secrets.SNYK_ORG }} | tee snyk-output.log"
+      
+      - name: Display Snyk Test Results
+        run: cat snyk-output.log
