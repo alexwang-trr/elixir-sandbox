@@ -1,15 +1,20 @@
-name: Hello World PR Check
+name: Snyk PR Check
 
 # Trigger the workflow on pull request events
 on: [pull_request]
 
 jobs:
-  hello-world-job:
+  snyk-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Say Hello
-        run: echo "Hello World"
+      - name: Run Snyk Test
+        uses: docker://snyk/snyk:docker-latest
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORG: ${{ secrets.SNYK_ORG }}
+        with:
+          args: test --org=${{ secrets.SNYK_ORG }}
