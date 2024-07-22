@@ -20,7 +20,7 @@ jobs:
             -v "${{ github.workspace }}:/project" \
             -w /project \
             -e SNYK_TOKEN="${{ secrets.SNYK_TOKEN }}" \
-            snyk/snyk:docker-latest snyk test --file=Dockerfile | tee snyk-output.log
+            snyk/snyk:docker-latest snyk test --docker --file=Dockerfile | tee snyk-output.log
 
       - name: Display Snyk Test Results
         run: cat snyk-output.log
