@@ -29,6 +29,8 @@ defmodule Example.MixProject do
       {:httpoison, "~> 2.1"},
       {:hackney, "~> 1.9"},
 
+      {:ecto, "2.2.0"},
+
       # GRPC
       {:grpc, "~> 0.6"},
       {:protobuf, "~> 0.11"},
