@@ -11,8 +11,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run Sobelow Action
-        uses: ./.github/sobelow
+      - name: Set up Elixir
+        uses: actions/setup-elixir@v1.5.0
         with:
-          working-directory: .
-        continue-on-error: false
+          otp-version: '23.x'
+          elixir-version: '1.11.x'
+
+      - name: Install dependencies
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get
+        working-directory: .
+
+      - name: Run Sobelow
+        run: |
+          mix sobelow --exit --format json --out ${{ github.workspace }}/sobelow-output.json
+        working-directory: .
