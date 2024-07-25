@@ -11,8 +11,8 @@ runs:
     - name: Set up Elixir
       uses: erlef/setup-beam@v1
       with:
-        otp-version: '26'
-        elixir-version: '1.14.5'
+        otp-version: '27'
+        elixir-version: '1.17.2'
     - name: Install dependencies
       run: |
         mix local.rebar --force
