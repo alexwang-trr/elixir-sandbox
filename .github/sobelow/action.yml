@@ -9,7 +9,7 @@ runs:
   using: 'composite'
   steps:
     - name: Set up Elixir
-      uses: actions/setup-elixir@v1.5.0
+      uses: erlef/setup-beam@v1
       with:
         otp-version: '23.x'
         elixir-version: '1.11.x'

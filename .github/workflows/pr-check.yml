@@ -11,37 +11,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Elixir and Erlang
-        run: |
-          sudo add-apt-repository ppa:rabbitmq/rabbitmq-erlang -y
-          sudo apt update
-          sudo apt install elixir erlang-dev erlang-xmerl -y
-
-      - name: Install Sobelow and dependencies
-        run: |
-          mix archive.install hex sobelow --force
-          mix deps.get
-          mix deps.compile
-
-      - name: Display installed dependencies
-        run: mix deps
-
-      - name: Run Sobelow
-        run: |
-          mix sobelow --exit --format json --out ${{ github.workspace }}/sobelow-output.json
-        working-directory: .
-
-      - name: Check and Display Sobelow findings
-        if: success()  # Only run if the previous steps were successful
-        run: |
-          if [ -s sobelow-report.txt ]; then
-            cat sobelow-report.txt  # Display the text report if it's not empty
-          else
-            echo "No security issues found by Sobelow."
-          fi
-
-      - name: Display Sobelow scan results
-        if: always()  # Ensure this step runs even if previous steps fail
-        run: |
-          cat sobelow-report.txt  # Always display the text report for visibility
-        continue-on-error: true 
+      - name: Run Sobelow Action
+        uses: ./.github/sobelow
+        with:
+          working-directory: .
+        continue-on-error: false
