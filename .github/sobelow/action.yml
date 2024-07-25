@@ -6,14 +6,20 @@ inputs:
     required: false
     default: '.'
 runs:
-  using: 'docker'
-  image: 'elixir:latest'
+  using: 'composite'
   steps:
+    - name: Set up Elixir
+      uses: actions/setup-elixir@v1
+      with:
+        otp-version: '23.x'
+        elixir-version: '1.11.x'
     - name: Install dependencies
       run: |
         mix local.rebar --force
         mix local.hex --force
         mix deps.get
+      working-directory: ${{ inputs.working-directory }}
     - name: Run Sobelow
       run: |
         mix sobelow --exit --format json --out ${{ github.workspace }}/sobelow-output.json
+      working-directory: ${{ inputs.working-directory }}
