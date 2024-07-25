@@ -23,17 +23,8 @@ jobs:
             snyk/snyk:elixir snyk test --file=mix.exs --org=${{ secrets.SNYK_ORG }} | tee snyk-output.log
         continue-on-error: false
 
-  sobelow-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Run Sobelow
-        run: |
-          mix local.rebar --force
-          mix local.hex --force
-          mix deps.get
-          mix sobelow --exit --format json --out sobelow-output.json
+      - name: Run Sobelow Action
+        uses: ./.github/actions/sobelow
+        with:
+          working-directory: .
         continue-on-error: false

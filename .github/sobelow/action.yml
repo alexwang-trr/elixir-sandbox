@@ -1,18 +1,19 @@
-name: Sobelow
-author: Griffin Byatt
-description: Security-focused static analysis for the Phoenix Framework
-
+name: 'Run Sobelow'
+description: 'A custom action to run Sobelow security analysis'
 inputs:
-  report:
-    required: true
-    description: "Output a results.sarif file for GitHub Security integration"
-    default: true
-  flags:
-    description: "Flags (https://github.com/nccgroup/sobelow#options)"
-
+  working-directory:
+    description: 'The directory to run Sobelow in'
+    required: false
+    default: '.'
 runs:
   using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.flags }}
-    - ${{ inputs.report }}
+  image: 'elixir:latest'
+  steps:
+    - name: Install dependencies
+      run: |
+        mix local.rebar --force
+        mix local.hex --force
+        mix deps.get
+    - name: Run Sobelow
+      run: |
+        mix sobelow --exit --format json --out ${{ github.workspace }}/sobelow-output.json
