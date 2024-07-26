@@ -23,4 +23,5 @@ runs:
   args:
   - snyk
   - ${{ inputs.command }}
+  - --org=security-sandbox
   - ${{ inputs.args }} 
