@@ -54,6 +54,8 @@ jobs:
         # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
       - name: Snyk Open Source monitor
         run: snyk monitor --org=security-sandbox
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
         # Push the Snyk Code results into GitHub Code Scanning tab
       - name: Upload result to GitHub Code Scanning
