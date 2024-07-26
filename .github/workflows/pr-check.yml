@@ -16,3 +16,9 @@ jobs:
         with:
           working-directory: .
         continue-on-error: false
+
+      - name: Run Snyk Action
+        uses: ./.github/snyk
+        with:
+          working-directory: .
+        continue-on-error: false
