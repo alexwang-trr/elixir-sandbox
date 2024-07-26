@@ -15,8 +15,7 @@ runs:
         elixir-version: '1.17.2'
     - name: Install dependencies
       run: |
-        mix local.rebar --force
-        mix local.hex --force
+        mix archive.install hex sobelow --force
         mix deps.get
       shell: bash
       working-directory: ${{ inputs.working-directory }}
