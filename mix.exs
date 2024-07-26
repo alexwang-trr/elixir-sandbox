@@ -28,15 +28,8 @@ defmodule Example.MixProject do
       # HTTP clients
       {:httpoison, "~> 2.1"},
       {:hackney, "~> 1.9"},
-
-      {:ecto, "2.2.0"},
-
-      # GRPC
-      {:grpc, "~> 0.6"},
-      {:protobuf, "~> 0.11"},
-      {:plug_crypto, "~> 1.2.5"},
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:paginator, "0.6.0"},
+      {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false}
     ]
   end
 end
