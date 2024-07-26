@@ -7,7 +7,7 @@ branding:
 inputs:
   command:
     description: "Which Snyk command to run, defaults to test"
-    default: test
+    default: monitor
   args:
     description: "Additional arguments to pass to Snyk"
   json:
