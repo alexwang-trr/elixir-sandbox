@@ -19,6 +19,8 @@ jobs:
 
       - name: Run Snyk Action
         uses: ./.github/snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           working-directory: .
         continue-on-error: false
