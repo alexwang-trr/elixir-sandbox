@@ -21,6 +21,6 @@ runs:
       working-directory: ${{ inputs.working-directory }}
     - name: Run Sobelow
       run: |
-        mix sobelow --exit --format json --out ${{ github.workspace }}/sobelow-output.json
+        mix sobelow
       shell: bash
       working-directory: ${{ inputs.working-directory }}
