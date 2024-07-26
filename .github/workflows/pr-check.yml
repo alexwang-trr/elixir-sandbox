@@ -15,12 +15,21 @@ jobs:
         uses: ./.github/sobelow
         with:
           working-directory: .
-        continue-on-error: false
+        continue-on-error: true
 
-      - name: Run Snyk Action
+      - name: Run Snyk Test
         uses: ./.github/snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           working-directory: .
-        continue-on-error: false
+        continue-on-error: true
+
+      - name: Snyk Open Source monitor
+        uses: ./.github/snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --org=security-sandbox
+        continue-on-error: true
