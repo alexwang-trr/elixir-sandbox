@@ -7,7 +7,7 @@ branding:
 inputs:
   command:
     description: "Which Snyk command to run, defaults to test"
-    default: monitor
+    default: test
   args:
     description: "Additional arguments to pass to Snyk"
   json:
@@ -23,5 +23,4 @@ runs:
   args:
   - snyk
   - ${{ inputs.command }}
-  - --org=security-sandbox
   - ${{ inputs.args }} 
