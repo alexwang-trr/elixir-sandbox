@@ -61,6 +61,7 @@ jobs:
 
             if (vulnerabilities.length > 0) {
               const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:\n\n${vulnerabilities.map(vuln => `- **${vuln.title}** (Severity: ${vuln.severity})\n  - Details: ${vuln.url}`).join('\n')}\n`;
+            }
 
             const checkRun = await github.rest.checks.create({
               owner: context.repo.owner,
