@@ -18,7 +18,7 @@ jobs:
       - name: Create Check
         id: checkrun                    # An ID to allow the step to be referenced
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }} # Expose the token for GH CLI
+          GH_TOKEN: ${{ secrets.TOKEN_GITHUB }} # Expose the token for GH CLI
         run: |
           gh auth login --with-token <<< "${{ secrets.TOKEN_GITHUB }}"
           ##########################################################
@@ -45,7 +45,7 @@ jobs:
 
       - name: Repository Dispatch
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         run: |
           ##########################################################
           # Create a repository_dispatch event of type my-check
