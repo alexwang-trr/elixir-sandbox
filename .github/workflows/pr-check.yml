@@ -85,6 +85,8 @@ jobs:
 
             const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:${snyk_monitor_data.uri}\n\n${vulnerabilities.map(vuln => `- **${vuln.title}** (Severity: ${vuln.severity})\n  - Details: ${vuln.url}`).join('\n')}\n`;
 
+            const snykProjectUrl = 'https://app.snyk.io/org/security-sandbox/project/10ff1355-3a96-433a-b083-22eaf8868239'; // Replace with your Snyk project URL
+
             const checkRun = await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -97,9 +99,9 @@ jobs:
                 summary: comment,
                 text: comment
               },
-              details_url: snyk_monitor_data.uri
+              details_url: snykProjectUrl
             });
 
             console.log('Check run created:', checkRun.data);
         env:
-            GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
