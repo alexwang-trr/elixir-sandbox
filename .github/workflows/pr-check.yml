@@ -104,4 +104,4 @@ jobs:
 
               console.log('Check run created:', checkRun.data);
             env:
-              GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+              GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
