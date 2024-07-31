@@ -83,7 +83,7 @@ jobs:
             // Adjust this based on the actual structure of the Snyk JSON report
             const vulnerabilities = data.vulnerabilities || [];
 
-            const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:\n\n${vulnerabilities.map(vuln => `- **${vuln.title}** (Severity: ${vuln.severity})\n  - Details: ${vuln.url}`).join('\n')}\n`;
+            const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:${snyk_monitor_data.uri}\n\n${vulnerabilities.map(vuln => `- **${vuln.title}** (Severity: ${vuln.severity})\n  - Details: ${vuln.url}`).join('\n')}\n`;
 
             const checkRun = await github.rest.checks.create({
               owner: context.repo.owner,
