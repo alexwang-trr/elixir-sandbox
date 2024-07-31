@@ -1,0 +1,41 @@
+name: Update Check Details URL
+
+on:
+  workflow_run:
+    workflows: ["Your Workflow Name"]
+    types:
+      - completed
+
+jobs:
+  update-details-url:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+
+    - name: Install GitHub CLI
+      run: sudo apt-get install gh
+
+    - name: Update Check Run Details URL
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+        SNYK_URL: "https://app.snyk.io/org/security-sandbox/project/10ff1355-3a96-433a-b083-22eaf8868239"
+      run: |
+        # Fetch the check runs for the latest commit
+        CHECK_RUNS=$(gh api /repos/${{ github.repository }}/commits/${{ github.sha }}/check-runs \
+          | jq -r '.check_runs[] | select(.name == "Your Check Run Name") | .id')
+
+        # Update each check run with the new details URL
+        for CHECK_RUN_ID in $CHECK_RUNS; do
+          gh api /repos/${{ github.repository }}/check-runs/$CHECK_RUN_ID \
+            -X PATCH \
+            -F "output.title=Check Run Results" \
+            -F "output.summary=Click [here]($SNYK_URL) for details" \
+            -F "output.text=Check results are available at $SNYK_URL"
+        done
