@@ -8,9 +8,9 @@ on:
 jobs:
   start-check:
     runs-on: ubuntu-latest
-    permissions:
-      checks: write   # Permission to create a Check Run
-      contents: write # Permission to write a repository_dispatch requests
+    # permissions:
+    #   checks: write   # Permission to create a Check Run
+    #   contents: write # Permission to write a repository_dispatch requests
     steps:
       - name: Create Check
         id: checkrun                    # An ID to allow the step to be referenced
