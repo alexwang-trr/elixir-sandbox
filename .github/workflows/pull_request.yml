@@ -12,6 +12,12 @@ jobs:
     #   checks: write   # Permission to create a Check Run
     #   contents: write # Permission to write a repository_dispatch requests
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup gh CLI
+        run: gh auth login --with-token <<< "${{ secrets.TOKEN_GITHUB }}"
+
       - name: Create Check
         id: checkrun                    # An ID to allow the step to be referenced
         env:
