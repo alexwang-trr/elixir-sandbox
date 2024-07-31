@@ -1,0 +1,127 @@
+name: PR Report Comment
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Read Sobelow Report and Comment on PR
+        id: read-comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'sobelow_report.json'; // Adjust path if necessary
+            
+            if (!fs.existsSync(path)) {
+              console.log(`File ${path} does not exist.`);
+              return;
+            }
+
+            const report = fs.readFileSync(path, 'utf-8');
+            const data = JSON.parse(report);
+
+            // Extract findings from the report
+            const highConfidence = data.findings.high_confidence || [];
+            const mediumConfidence = data.findings.medium_confidence || [];
+            const lowConfidence = data.findings.low_confidence || [];
+
+            let comment = '## Sobelow Findings Report\n\n';
+            comment += `### Total Findings: ${data.total_findings}\n\n`;
+
+            if (highConfidence.length > 0) {
+              comment += '### High Confidence Findings:\n';
+              comment += highConfidence.map(vuln => 
+                `- **${vuln.type}**\n  - File: ${vuln.file}\n  - Line: ${vuln.line}\n  - Variable: ${vuln.variable}\n`
+              ).join('\n');
+            }
+
+            if (mediumConfidence.length > 0) {
+              comment += '\n### Medium Confidence Findings:\n';
+              comment += mediumConfidence.map(vuln => 
+                `- **${vuln.type}**\n  - File: ${vuln.file}\n  - Line: ${vuln.line}\n  - Variable: ${vuln.variable}\n`
+              ).join('\n');
+            }
+
+            if (lowConfidence.length > 0) {
+              comment += '\n### Low Confidence Findings:\n';
+              comment += lowConfidence.map(vuln => 
+                `- **${vuln.type}**\n  - File: ${vuln.file}\n  - Line: ${vuln.line}\n  - Variable: ${vuln.variable}\n`
+              ).join('\n');
+            }
+
+            if (highConfidence.length === 0 && mediumConfidence.length === 0 && lowConfidence.length === 0) {
+              comment += 'No findings found.';
+            }
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Sobelow Report for Check Runs
+        uses: actions/upload-artifact@v3
+        with:
+          name: sobelow_report
+          path: sobelow_report.json
+
+      - name: Create Check Run
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'sobelow_report.json'; // Path to the Sobelow report
+
+            if (!fs.existsSync(path)) {
+              throw new Error(`File ${path} does not exist.`);
+            }
+
+            const report = fs.readFileSync(path, 'utf-8');
+            const data = JSON.parse(report);
+
+            // Extract findings for check run summary
+            const highConfidence = data.findings.high_confidence.length;
+            const mediumConfidence = data.findings.medium_confidence.length;
+            const lowConfidence = data.findings.low_confidence.length;
+
+            let summary = '## Sobelow Findings Report\n\n';
+            summary += `### High Confidence Findings: ${highConfidence}\n`;
+            summary += `### Medium Confidence Findings: ${mediumConfidence}\n`;
+            summary += `### Low Confidence Findings: ${lowConfidence}\n`;
+
+            if (highConfidence === 0 && mediumConfidence === 0 && lowConfidence === 0) {
+              summary += 'No findings found.';
+            }
+
+            const checkRun = await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Sobelow Findings Check',
+              head_sha: context.payload.pull_request.head.sha,
+              status: 'completed',
+              conclusion: highConfidence > 0 ? 'failure' : 'success',
+              output: {
+                title: 'Sobelow Findings Report',
+                summary: summary,
+                text: summary
+              }
+            });
+
+            console.log('Check run created:', checkRun.data);
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
