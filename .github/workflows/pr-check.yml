@@ -11,13 +11,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Check for Elixir files
+        id: check-elixir
+        run: |
+          if ls *.ex* 1> /dev/null 2>&1; then
+            echo "found=true" >> $GITHUB_ENV
+          else
+            echo "found=false" >> $GITHUB_ENV
+          fi
+
       - name: Run Sobelow Action
+        if: env.found == 'true'
         uses: ./.github/sobelow
         with:
           working-directory: .
         continue-on-error: true
 
       - name: Run Snyk Test
+        if: env.found == 'true'
         uses: ./.github/snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -27,12 +38,14 @@ jobs:
         continue-on-error: true
 
       - name: Upload Snyk Test Report
+        if: env.found == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: snyk-test-report
           path: snyk-test-report.json
 
       - name: Snyk Open Source monitor
+        if: env.found == 'true'
         uses: ./.github/snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -42,17 +55,20 @@ jobs:
         continue-on-error: true
 
       - name: Upload Snyk Monitor Report
+        if: env.found == 'true'
         uses: actions/upload-artifact@v3
         with:
           name: snyk-monitor-report
           path: snyk-monitor-report.json
 
       - name: Create Check Run
+        if: env.found == 'true'
         uses: actions/github-script@v6
         with:
           script: |
             const fs = require('fs');
-            const path = 'snyk-test-report.json'; // Path to the Sobelow report
+            const path = 'snyk-test-report.json'; // Path to the Snyk report
+            const snyk_monitor_file = 'snyk-monitor-report.json'; // Path to the Snyk report
 
             if (!fs.existsSync(path)) {
               throw new Error(`File ${path} does not exist.`);
@@ -60,6 +76,9 @@ jobs:
 
             const report = fs.readFileSync(path, 'utf-8');
             const data = JSON.parse(report);
+
+            const snyk_monitor_report = fs.readFileSync(snyk_monitor_file, 'utf-8');
+            const snyk_monitor_data = JSON.parse(snyk_monitor_report);
 
             // Adjust this based on the actual structure of the Snyk JSON report
             const vulnerabilities = data.vulnerabilities || [];
