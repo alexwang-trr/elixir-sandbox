@@ -20,7 +20,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.TOKEN_GITHUB }} # Expose the token for GH CLI
         run: |
-          gh auth login --with-token <<< "${{ secrets.TOKEN_GITHUB }}"
           ##########################################################
           # Create a Check Run and indicate that it is being queued
           # Use --jq to return the ID
