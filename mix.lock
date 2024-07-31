@@ -1,4 +1,5 @@
 %{
+  "dep_from_hexpm": {:hex, :dep_from_hexpm, "0.3.0", "e820a753364b715e84457836317107c340d3bdcaa21b469272da79f29ef5f5cb", [:mix], [], "hexpm", "55b0c9db6c5666a4358e1d8e799f43f3fa091ef036dc0d09bf5ee9f091f07b6d"},
   "starkbank_ecdsa": {:hex, :starkbank_ecdsa, "1.0.0", "c186202de5535da8bef58bf2768a25b16781c19fa026ad2d67deb2efc0afde0e", [:mix], [], "hexpm", "2ed5050ef40d142c09e19fc63a086b34f36b864fda3601bd6c10f3e77cf3d35f"},
   "uuid": {:hex, :uuid, "1.1.8", "e22fc04499de0de3ed1116b770c7737779f226ceefa0badb3592e64d5cfb4eb9", [:mix], [], "hexpm", "c790593b4c3b601f5dc2378baae7efaf5b3d73c4c6456ba85759905be792f2ac"},
 }
