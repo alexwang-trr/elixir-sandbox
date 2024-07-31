@@ -20,7 +20,7 @@ jobs:
 
     - name: Update Check Run Details URL
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         SNYK_URL: "https://app.snyk.io/org/security-sandbox/project/10ff1355-3a96-433a-b083-22eaf8868239"
       run: |
         # Fetch the check runs for the latest commit
