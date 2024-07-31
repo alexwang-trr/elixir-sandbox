@@ -97,7 +97,7 @@ jobs:
                 summary: comment,
                 text: comment
               },
-              details_url: ${snyk_monitor_data.uri}
+              details_url: snyk_monitor_data.uri
             });
 
             console.log('Check run created:', checkRun.data);
