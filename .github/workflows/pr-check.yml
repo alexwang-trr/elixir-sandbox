@@ -96,7 +96,8 @@ jobs:
                 title: 'Snyk Vulnerability Findings Report',
                 summary: comment,
                 text: comment
-              }
+              },
+              details_url: ${snyk_monitor_data.uri}
             });
 
             console.log('Check run created:', checkRun.data);
