@@ -33,7 +33,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: '--org=security-sandbox --json > snyk-test-report.json'
+          args: --org=security-sandbox --json > snyk-test-report.json
           working-directory: .
         continue-on-error: true
 
@@ -50,8 +50,8 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: 'monitor'
-          args: '--org=security-sandbox --json > snyk-monitor-report.json'
+          command: monitor
+          args: --org=security-sandbox --json > snyk-monitor-report.json
         continue-on-error: true
 
       - name: Upload Snyk Monitor Report
