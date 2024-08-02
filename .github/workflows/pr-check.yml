@@ -67,8 +67,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const path = 'snyk-test-report.json'; // Path to the Snyk report
-            const snyk_monitor_file = 'snyk-test-report.json'; // Path to the Snyk report
+            const path = 'snyk-test-report.json';
 
             if (!fs.existsSync(path)) {
               throw new Error(`File ${path} does not exist.`);
@@ -76,53 +75,33 @@ jobs:
 
             const report = fs.readFileSync(path, 'utf-8');
             const data = JSON.parse(report);
-
-            const snyk_monitor_report = fs.readFileSync(snyk_monitor_file, 'utf-8');
-            const snyk_monitor_data = JSON.parse(snyk_monitor_report);
-
-            // Adjust this based on the actual structure of the Snyk JSON report
             const vulnerabilities = data.vulnerabilities || [];
 
             // Function to generate the HTML table for vulnerabilities
             function generateVulnerabilitiesTable(data) {
-              if (!Array.isArray(data.vulnerabilities)) {
+              if (!Array.isArray(data.vulnerabilities) || data.vulnerabilities.length === 0) {
                 return '<p>No vulnerabilities found.</p>';
               }
 
+              // Get headers from the keys of the first vulnerability object
+              const headers = Object.keys(data.vulnerabilities[0]);
+
               let table = `<table>
                 <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>CVSSv3</th>
-                    <th>Credit</th>
-                    <th>Semver</th>
-                    <th>Exploit</th>
-                    <th>Fixed In</th>
-                    <th>Language</th>
-                    <th>Severity</th>
-                    <th>CVSS Score</th>
-                    <th>Module Name</th>
-                    <th>References</th>
-                  </tr>
+                  <tr>`;
+              headers.forEach(header => {
+                table += `<th>${header}</th>`;
+              });
+              table += `</tr>
                 </thead>
                 <tbody>`;
 
               data.vulnerabilities.forEach(vuln => {
-                table += `<tr>
-                  <td>${vuln.id}</td>
-                  <td>${vuln.title}</td>
-                  <td>${vuln.CVSSv3}</td>
-                  <td>${vuln.credit.join(', ')}</td>
-                  <td>${vuln.semver.vulnerable.join(', ')}</td>
-                  <td>${vuln.exploit}</td>
-                  <td>${vuln.fixedIn.join(', ')}</td>
-                  <td>${vuln.language}</td>
-                  <td>${vuln.severity}</td>
-                  <td>${vuln.cvssScore}</td>
-                  <td>${vuln.moduleName}</td>
-                  <td>${vuln.references.map(ref => `<a href="${ref.url}">${ref.title}</a>`).join(', ')}</td>
-                </tr>`;
+                table += `<tr>`;
+                headers.forEach(header => {
+                  table += `<td>${vuln[header] || ''}</td>`;
+                });
+                table += `</tr>`;
               });
 
               table += `</tbody>
@@ -133,7 +112,6 @@ jobs:
 
             // Function to generate the HTML table for severity counts
             function generateSeverityTable(data) {
-              // Initialize severity counts with 0
               const severityCounts = {
                 critical: 0,
                 high: 0,
@@ -141,9 +119,7 @@ jobs:
                 low: 0
               };
 
-              // Check if vulnerabilities is an array
               if (Array.isArray(data.vulnerabilities)) {
-                // Update counts based on actual data
                 data.vulnerabilities.forEach(vuln => {
                   if (severityCounts[vuln.severity] !== undefined) {
                     severityCounts[vuln.severity]++;
@@ -175,8 +151,6 @@ jobs:
 
             const vulnerabilitiesTableHTML = generateVulnerabilitiesTable(data);
             const severityTableHTML = generateSeverityTable(data);
-
-            const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:\n\n\n\n${vulnerabilitiesTableHTML}\n\n### Vulnerability Counts by Severity\n\n${severityTableHTML}`;
 
             const checkRun = await github.rest.checks.create({
               owner: context.repo.owner,
