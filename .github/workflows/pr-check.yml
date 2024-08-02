@@ -83,8 +83,8 @@ jobs:
             // Adjust this based on the actual structure of the Snyk JSON report
             const vulnerabilities = data.vulnerabilities || [];
 
-            // Function to generate the HTML table
-            function generateTable(data) {
+            // Function to generate the HTML table for vulnerabilities
+            function generateVulnerabilitiesTable(data) {
               let table = `<table>
                 <thead>
                   <tr>
@@ -127,9 +127,43 @@ jobs:
               return table;
             }
 
-            const tableHTML = generateTable(data);
+            // Function to generate the HTML table for severity counts
+            function generateSeverityTable(data) {
+              const severityCounts = data.vulnerabilities.reduce((acc, vuln) => {
+                if (acc[vuln.severity]) {
+                  acc[vuln.severity]++;
+                } else {
+                  acc[vuln.severity] = 1;
+                }
+                return acc;
+              }, {});
 
-            const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:\n\n[View in Snyk](${snyk_monitor_data.uri})\n\n${tableHTML}`;
+              let table = `<table>
+                <thead>
+                  <tr>
+                    <th>Severity</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>`;
+
+              for (const [severity, count] of Object.entries(severityCounts)) {
+                table += `<tr>
+                  <td>${severity}</td>
+                  <td>${count}</td>
+                </tr>`;
+              }
+
+              table += `</tbody>
+              </table>`;
+
+              return table;
+            }
+
+            const vulnerabilitiesTableHTML = generateVulnerabilitiesTable(data);
+            const severityTableHTML = generateSeverityTable(data);
+
+            const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:\n\n[View in Snyk](${snyk_monitor_data.uri})\n\n${vulnerabilitiesTableHTML}\n\n### Vulnerability Counts by Severity\n\n${severityTableHTML}`;
 
             const checkRun = await github.rest.checks.create({
               owner: context.repo.owner,
@@ -140,12 +174,13 @@ jobs:
               conclusion: vulnerabilities.length > 0 ? 'failure' : 'success',
               output: {
                 title: 'Snyk Vulnerability Findings Report',
-                summary: tableHTML,
-                text: tableHTML
+                summary: severityTableHTML,
+                text: vulnerabilitiesTableHTML
               }
             });
 
             console.log('Check run created:', checkRun.data);
+
 
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
