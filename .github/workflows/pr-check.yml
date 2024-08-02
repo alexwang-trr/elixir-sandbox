@@ -68,6 +68,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = 'snyk-test-report.json'; // Path to the Snyk report
+            const snyk_monitor_file = 'snyk-test-report.json'; // Path to the Snyk report
 
             if (!fs.existsSync(path)) {
               throw new Error(`File ${path} does not exist.`);
@@ -76,11 +77,18 @@ jobs:
             const report = fs.readFileSync(path, 'utf-8');
             const data = JSON.parse(report);
 
+            const snyk_monitor_report = fs.readFileSync(snyk_monitor_file, 'utf-8');
+            const snyk_monitor_data = JSON.parse(snyk_monitor_report);
+
             // Adjust this based on the actual structure of the Snyk JSON report
             const vulnerabilities = data.vulnerabilities || [];
 
             // Function to generate the HTML table for vulnerabilities
             function generateVulnerabilitiesTable(data) {
+              if (!Array.isArray(data.vulnerabilities)) {
+                return '<p>No vulnerabilities found.</p>';
+              }
+
               let table = `<table>
                 <thead>
                   <tr>
@@ -133,12 +141,15 @@ jobs:
                 low: 0
               };
 
-              // Update counts based on actual data
-              data.vulnerabilities.forEach(vuln => {
-                if (severityCounts[vuln.severity] !== undefined) {
-                  severityCounts[vuln.severity]++;
-                }
-              });
+              // Check if vulnerabilities is an array
+              if (Array.isArray(data.vulnerabilities)) {
+                // Update counts based on actual data
+                data.vulnerabilities.forEach(vuln => {
+                  if (severityCounts[vuln.severity] !== undefined) {
+                    severityCounts[vuln.severity]++;
+                  }
+                });
+              }
 
               let table = `<table>
                 <thead>
@@ -165,6 +176,8 @@ jobs:
             const vulnerabilitiesTableHTML = generateVulnerabilitiesTable(data);
             const severityTableHTML = generateSeverityTable(data);
 
+            const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:\n\n\n\n${vulnerabilitiesTableHTML}\n\n### Vulnerability Counts by Severity\n\n${severityTableHTML}`;
+
             const checkRun = await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -180,8 +193,6 @@ jobs:
             });
 
             console.log('Check run created:', checkRun.data);
-
-
 
 
         env:
