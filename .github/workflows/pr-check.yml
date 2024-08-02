@@ -68,7 +68,6 @@ jobs:
           script: |
             const fs = require('fs');
             const path = 'snyk-test-report.json'; // Path to the Snyk report
-            # const snyk_monitor_file = 'snyk-monitor-report.json'; // Path to the Snyk report
 
             if (!fs.existsSync(path)) {
               throw new Error(`File ${path} does not exist.`);
@@ -76,9 +75,6 @@ jobs:
 
             const report = fs.readFileSync(path, 'utf-8');
             const data = JSON.parse(report);
-
-            # const snyk_monitor_report = fs.readFileSync(snyk_monitor_file, 'utf-8');
-            # const snyk_monitor_data = JSON.parse(snyk_monitor_report);
 
             // Adjust this based on the actual structure of the Snyk JSON report
             const vulnerabilities = data.vulnerabilities || [];
@@ -169,8 +165,6 @@ jobs:
             const vulnerabilitiesTableHTML = generateVulnerabilitiesTable(data);
             const severityTableHTML = generateSeverityTable(data);
 
-            # const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:\n\n[View in Snyk](${snyk_monitor_data.uri})\n\n${vulnerabilitiesTableHTML}\n\n### Vulnerability Counts by Severity\n\n${severityTableHTML}`;
-
             const checkRun = await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -180,8 +174,8 @@ jobs:
               conclusion: vulnerabilities.length > 0 ? 'failure' : 'success',
               output: {
                 title: 'Snyk Vulnerability Findings Report',
-                summary: comment,
-                text: comment
+                summary: severityTableHTML,
+                text: vulnerabilitiesTableHTML
               }
             });
 
