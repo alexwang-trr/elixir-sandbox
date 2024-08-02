@@ -129,14 +129,20 @@ jobs:
 
             // Function to generate the HTML table for severity counts
             function generateSeverityTable(data) {
-              const severityCounts = data.vulnerabilities.reduce((acc, vuln) => {
-                if (acc[vuln.severity]) {
-                  acc[vuln.severity]++;
-                } else {
-                  acc[vuln.severity] = 1;
+              // Initialize severity counts with 0
+              const severityCounts = {
+                critical: 0,
+                high: 0,
+                medium: 0,
+                low: 0
+              };
+
+              // Update counts based on actual data
+              data.vulnerabilities.forEach(vuln => {
+                if (severityCounts[vuln.severity] !== undefined) {
+                  severityCounts[vuln.severity]++;
                 }
-                return acc;
-              }, {});
+              });
 
               let table = `<table>
                 <thead>
@@ -174,12 +180,13 @@ jobs:
               conclusion: vulnerabilities.length > 0 ? 'failure' : 'success',
               output: {
                 title: 'Snyk Vulnerability Findings Report',
-                summary: severityTableHTML,
-                text: vulnerabilitiesTableHTML
+                summary: comment,
+                text: comment
               }
             });
 
             console.log('Check run created:', checkRun.data);
+
 
 
         env:
