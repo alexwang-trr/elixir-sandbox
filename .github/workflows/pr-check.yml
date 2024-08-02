@@ -83,7 +83,53 @@ jobs:
             // Adjust this based on the actual structure of the Snyk JSON report
             const vulnerabilities = data.vulnerabilities || [];
 
-            const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:\n\n[View in Snyk](${snyk_monitor_data.uri})\n\n${vulnerabilities.map(vuln => `- **${vuln.title}** (Severity: ${vuln.severity})\n  - Details: ${vuln.url}`).join('\n')}\n`;
+            // Function to generate the HTML table
+            function generateTable(data) {
+              let table = `<table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>CVSSv3</th>
+                    <th>Credit</th>
+                    <th>Semver</th>
+                    <th>Exploit</th>
+                    <th>Fixed In</th>
+                    <th>Language</th>
+                    <th>Severity</th>
+                    <th>CVSS Score</th>
+                    <th>Module Name</th>
+                    <th>References</th>
+                  </tr>
+                </thead>
+                <tbody>`;
+
+              data.vulnerabilities.forEach(vuln => {
+                table += `<tr>
+                  <td>${vuln.id}</td>
+                  <td>${vuln.title}</td>
+                  <td>${vuln.CVSSv3}</td>
+                  <td>${vuln.credit.join(', ')}</td>
+                  <td>${vuln.semver.vulnerable.join(', ')}</td>
+                  <td>${vuln.exploit}</td>
+                  <td>${vuln.fixedIn.join(', ')}</td>
+                  <td>${vuln.language}</td>
+                  <td>${vuln.severity}</td>
+                  <td>${vuln.cvssScore}</td>
+                  <td>${vuln.moduleName}</td>
+                  <td>${vuln.references.map(ref => `<a href="${ref.url}">${ref.title}</a>`).join(', ')}</td>
+                </tr>`;
+              });
+
+              table += `</tbody>
+              </table>`;
+
+              return table;
+            }
+
+            const tableHTML = generateTable(data);
+
+            const comment = `## Snyk Vulnerability Report\n\n### Found ${vulnerabilities.length} vulnerabilities:\n\n[View in Snyk](${snyk_monitor_data.uri})\n\n${tableHTML}`;
 
             const checkRun = await github.rest.checks.create({
               owner: context.repo.owner,
@@ -94,11 +140,12 @@ jobs:
               conclusion: vulnerabilities.length > 0 ? 'failure' : 'success',
               output: {
                 title: 'Snyk Vulnerability Findings Report',
-                summary: comment,
-                text: comment
+                summary: tableHTML,
+                text: tableHTML
               }
             });
 
             console.log('Check run created:', checkRun.data);
+
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
