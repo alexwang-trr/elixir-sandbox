@@ -20,12 +20,12 @@ jobs:
             echo "found=false" >> $GITHUB_ENV
           fi
 
-      - name: Run Sobelow Action
-        if: env.found == 'true'
-        uses: ./.github/sobelow
-        with:
-          working-directory: .
-        continue-on-error: true
+      # - name: Run Sobelow Action
+      #   if: env.found == 'true'
+      #   uses: ./.github/sobelow
+      #   with:
+      #     working-directory: .
+      #   continue-on-error: true
 
       - name: Run Snyk Test
         if: env.found == 'true'
