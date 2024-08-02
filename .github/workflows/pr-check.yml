@@ -77,31 +77,45 @@ jobs:
             const data = JSON.parse(report);
             const vulnerabilities = data.vulnerabilities || [];
 
-            // Function to generate the HTML table for vulnerabilities
             function generateVulnerabilitiesTable(data) {
               if (!Array.isArray(data.vulnerabilities) || data.vulnerabilities.length === 0) {
                 return '<p>No vulnerabilities found.</p>';
               }
 
-              // Get headers from the keys of the first vulnerability object
-              const headers = Object.keys(data.vulnerabilities[0]);
-
               let table = `<table>
                 <thead>
-                  <tr>`;
-              headers.forEach(header => {
-                table += `<th>${header}</th>`;
-              });
-              table += `</tr>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>CVSSv3</th>
+                    <th>Credit</th>
+                    <th>Semver</th>
+                    <th>Exploit</th>
+                    <th>Fixed In</th>
+                    <th>Language</th>
+                    <th>Severity</th>
+                    <th>CVSS Score</th>
+                    <th>Module Name</th>
+                    <th>References</th>
+                  </tr>
                 </thead>
                 <tbody>`;
 
               data.vulnerabilities.forEach(vuln => {
-                table += `<tr>`;
-                headers.forEach(header => {
-                  table += `<td>${vuln[header] || ''}</td>`;
-                });
-                table += `</tr>`;
+                table += `<tr>
+                  <td>${vuln.id}</td>
+                  <td>${vuln.title}</td>
+                  <td>${vuln.CVSSv3 || ''}</td>
+                  <td>${vuln.credit ? vuln.credit.join(', ') : ''}</td>
+                  <td>${vuln.semver ? vuln.semver.vulnerable.join(', ') : ''}</td>
+                  <td>${vuln.exploit || ''}</td>
+                  <td>${vuln.fixedIn ? vuln.fixedIn.join(', ') : ''}</td>
+                  <td>${vuln.language || ''}</td>
+                  <td>${vuln.severity || ''}</td>
+                  <td>${vuln.cvssScore || ''}</td>
+                  <td>${vuln.moduleName || ''}</td>
+                  <td>${vuln.references ? vuln.references.map(ref => `<a href="${ref.url}">${ref.title}</a>`).join(', ') : ''}</td>
+                </tr>`;
               });
 
               table += `</tbody>
