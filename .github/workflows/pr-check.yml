@@ -102,11 +102,17 @@ jobs:
                 <tbody>`;
 
               data.vulnerabilities.forEach(vuln => {
+                let description = vuln.description || '';
+                const referenceIndex = description.indexOf('## References');
+                if (referenceIndex !== -1) {
+                  description = description.substring(0, referenceIndex).trim();
+                }
+
                 table += `<tr>
                   <td>${vuln.id || ''}</td>
                   <td>${vuln.title || ''}</td>
                   <td>${vuln.CVSSv3 || ''}</td>
-                  <td>${vuln.description || ''}</td>
+                  <td>${description}</td>
                   <td>${vuln.semver ? vuln.semver.vulnerable.join(', ') : ''}</td>
                   <td>${vuln.exploit || ''}</td>
                   <td>${vuln.fixedIn ? vuln.fixedIn.join(', ') : ''}</td>
