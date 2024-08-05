@@ -1,7 +1,11 @@
 name: Snyk PR Check
 
 # Trigger the workflow on pull request events
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - 'mix.exs'
+      - 'mix.lock'
 
 jobs:
   snyk-test:
