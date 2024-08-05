@@ -25,4 +25,4 @@ runs:
   - -c
   - |
     snyk test ${{ inputs.args }} --json > snyk-test-report.json
-    snyk monitor ${{ inputs.args }} --json > snyk-test-report.json
+    snyk monitor ${{ inputs.args }} --json > snyk-monitor-report.json
