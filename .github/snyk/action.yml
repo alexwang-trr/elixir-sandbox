@@ -1,16 +1,9 @@
 name: 'Snyk Scan Action'
 description: 'Runs snyk scan commands and generates a report'
-inputs:
-  args:
-    description: 'Additional arguments to pass to the snyk command (eg: --json)'
-    required: false
-    default: "--json"
     
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-  - ${{ inputs.args }}
   entrypoint: ["entrypoint.sh"]
   
   

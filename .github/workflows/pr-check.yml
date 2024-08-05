@@ -32,9 +32,6 @@ jobs:
         uses: ./.github/snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: 'test --json'
-          working-directory: .
         continue-on-error: true
 
       - name: Upload Snyk Test Report
