@@ -33,7 +33,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --org=security-sandbox --json > snyk-test-report.json
+          args: --org=security-sandbox
           working-directory: .
         continue-on-error: true
 
