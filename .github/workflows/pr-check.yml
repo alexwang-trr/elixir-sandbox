@@ -102,10 +102,15 @@ jobs:
                 <tbody>`;
 
               data.vulnerabilities.forEach(vuln => {
-                let description = vuln.description || '';
-                const referenceIndex = description.indexOf('## References');
-                if (referenceIndex !== -1) {
-                  description = description.substring(0, referenceIndex).trim();
+                let description = '';
+                if (vuln.description) {
+                  const overviewIndex = vuln.description.indexOf('## Overview');
+                  const referencesIndex = vuln.description.indexOf('## References');
+                  if (overviewIndex !== -1 && referencesIndex !== -1) {
+                    description = vuln.description.substring(overviewIndex + '## Overview'.length, referencesIndex).trim();
+                  } else if (overviewIndex !== -1) {
+                    description = vuln.description.substring(overviewIndex + '## Overview'.length).trim();
+                  }
                 }
 
                 table += `<tr>
@@ -129,6 +134,7 @@ jobs:
 
               return table;
             }
+
 
 
             // Function to generate the HTML table for severity counts
