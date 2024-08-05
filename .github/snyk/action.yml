@@ -16,7 +16,7 @@ runs:
   args:
   - ${{ inputs.snyk_command }}
   - ${{ inputs.snyk_args }}
-  entrypoint: "entrypoint.sh"
+  entrypoint: "./entrypoint.sh"
 
 
 outputs:
