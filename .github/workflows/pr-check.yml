@@ -27,23 +27,22 @@ jobs:
       #     working-directory: .
       #   continue-on-error: true
 
-      - name: Run Snyk Test and Monitor
+      - name: Run Snyk Test
         if: env.found == 'true'
-        run: |
-          snyk test --org=security-sandbox --json > snyk-test-report.json
-          snyk monitor --org=security-sandbox --json > snyk-monitor-report.json
+        uses: ./.github/snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --org=security-sandbox --json > snyk-test-report.json
+          working-directory: .
         continue-on-error: true
 
-      - name: Upload Snyk Reports
+      - name: Upload Snyk Test Report
         if: env.found == 'true'
         uses: actions/upload-artifact@v3
         with:
-          name: snyk-reports
-          path: |
-            snyk-test-report.json
-            snyk-monitor-report.json
+          name: snyk-test-report
+          path: snyk-test-report.json
 
       # - name: Snyk Open Source monitor
       #   if: env.found == 'true'
