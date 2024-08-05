@@ -1,0 +1,25 @@
+
+Testing /Users/alex.wang/workspace/hello-world-elixir/elixir/example...
+
+✗ High severity (originally Critical) vulnerability found in starkbank_ecdsa
+  Description: Improper Verification of Cryptographic Signature
+  Info: https://security.snyk.io/vuln/SNYK-HEX-STARKBANKECDSA-2940514
+  Introduced through: starkbank_ecdsa@1.0.0
+  From: starkbank_ecdsa@1.0.0
+  Fixed in: 1.0.1
+
+
+
+Organization:      security-sandbox
+Package manager:   hex
+Target file:       mix.exs
+Project name:      example
+Open source:       no
+Project path:      /Users/alex.wang/workspace/hello-world-elixir/elixir/example
+Licenses:          enabled
+
+Tested 2 dependencies for known issues, found 1 issue, 1 vulnerable path.
+
+Tip: Detected multiple supported manifests (2), use --all-projects to scan all of them at once.
+
+

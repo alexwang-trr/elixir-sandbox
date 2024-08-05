@@ -108,9 +108,8 @@ jobs:
 
               data.vulnerabilities.forEach(vuln => {
                 table += `<tr>
-                   <td><a href="https://security.snyk.io/vuln/${vuln.id}">${vuln.id || ''}</a></td>
+                  <td><a href="https://security.snyk.io/vuln/${vuln.id}">${vuln.id || ''}</a></td>
                   <td>${vuln.title || ''}</td>
-                  <td>${vuln.title}</td>
                   <td>${vuln.CVSSv3 || ''}</td>
                   <td>${vuln.semver ? vuln.semver.vulnerable.join(', ') : ''}</td>
                   <td>${vuln.exploit || ''}</td>
