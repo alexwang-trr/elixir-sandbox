@@ -10,12 +10,6 @@ if [ -z "${SNYK_TOKEN}" ]; then
   exit 1
 fi
 
-# Check if the first argument is provided
-if [ -z "$1" ]; then
-  echo "Error: No command provided. Please provide a snyk command."
-  exit 1
-fi
-
 
 # set SYNK Token
 export SNYK_TOKEN="${SNYK_TOKEN}"
