@@ -88,7 +88,7 @@ jobs:
                     <th>ID</th>
                     <th>Title</th>
                     <th>CVSSv3</th>
-                    <th>Description</th>
+                    <th>Credit</th>
                     <th>Semver</th>
                     <th>Exploit</th>
                     <th>Fixed In</th>
@@ -102,22 +102,11 @@ jobs:
                 <tbody>`;
 
               data.vulnerabilities.forEach(vuln => {
-                let description = '';
-                if (vuln.description) {
-                  const overviewIndex = vuln.description.indexOf('## Overview');
-                  const referencesIndex = vuln.description.indexOf('## References');
-                  if (overviewIndex !== -1 && referencesIndex !== -1) {
-                    description = vuln.description.substring(overviewIndex + '## Overview'.length, referencesIndex).trim();
-                  } else if (overviewIndex !== -1) {
-                    description = vuln.description.substring(overviewIndex + '## Overview'.length).trim();
-                  }
-                }
-
                 table += `<tr>
-                  <td>${vuln.id || ''}</td>
-                  <td>${vuln.title || ''}</td>
+                  <td>${vuln.id}</td>
+                  <td>${vuln.title}</td>
                   <td>${vuln.CVSSv3 || ''}</td>
-                  <td>${description}</td>
+                  <td>${vuln.credit ? vuln.credit.join(', ') : ''}</td>
                   <td>${vuln.semver ? vuln.semver.vulnerable.join(', ') : ''}</td>
                   <td>${vuln.exploit || ''}</td>
                   <td>${vuln.fixedIn ? vuln.fixedIn.join(', ') : ''}</td>
@@ -134,8 +123,6 @@ jobs:
 
               return table;
             }
-
-
 
             // Function to generate the HTML table for severity counts
             function generateSeverityTable(data) {
