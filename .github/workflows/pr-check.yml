@@ -32,6 +32,19 @@ jobs:
         uses: ./.github/snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --org=security-sandbox --json > snyk-test-report.json
+          working-directory: .
+        continue-on-error: true
+
+      - name: Snyk Open Source monitor
+        if: env.found == 'true'
+        uses: ./.github/snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --org=security-sandbox --json > snyk-monitor-report.json
         continue-on-error: true
 
       - name: Upload Snyk Test Report
@@ -42,16 +55,6 @@ jobs:
           path: |
             snyk-test-report.json
             snyk-monitor-report.json
-
-      # - name: Snyk Open Source monitor
-      #   if: env.found == 'true'
-      #   uses: ./.github/snyk
-      #   env:
-      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      #   with:
-      #     command: monitor
-      #     args: --org=security-sandbox --json > snyk-monitor-report.json
-      #   continue-on-error: true
 
       # - name: Upload Snyk Monitor Report
       #   if: env.found == 'true'
