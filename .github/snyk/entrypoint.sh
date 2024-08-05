@@ -1,15 +1,30 @@
 #!/bin/bash
-set -e  # Exit on error
-set -u  # Treat unset variables as an error
-set -o pipefail  # Catch errors in pipelines
+set -e
 
-echo "1st argument: $1"
-echo "Number of arguments: $#"
 
-# snyk test --json > snyk-report.json || true
-snyk test --org=security-sandbox --json > snyk-test-report.json || true
 
-snyk monitor --org=security-sandbox --json > snyk-monitor-report.json || true
+
+# Check if SNYK_TOKEN is set
+if [ -z "${SNYK_TOKEN}" ]; then
+  echo "Error: SNYK_TOKEN environment variable is not set."
+  exit 1
+fi
+
+# Check if the first argument is provided
+if [ -z "$1" ]; then
+  echo "Error: No command provided. Please provide a snyk command."
+  exit 1
+fi
+
+
+# set SYNK Token
+export SNYK_TOKEN="${SNYK_TOKEN}"
+
+# Remove the first argument (command) from the list
+shift
+
+# Run the snyk command with the remaining arguments
+snyk test --json > snyk-report.json
 
 # Optionally set the output path as an environment variable
-echo "snyk-report-path=snyk-report.json" >> $GITHUB_OUTPUT
+echo "snyk-report-path=snyk-report.json" >> $GITHUB_ENV
