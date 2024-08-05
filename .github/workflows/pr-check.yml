@@ -41,8 +41,10 @@ jobs:
         if: env.found == 'true'
         uses: actions/upload-artifact@v3
         with:
-          name: snyk-test-report
-          path: snyk-test-report.json
+          name: snyk reports
+          path: |
+            snyk-test-report.json
+            snyk-monitor-report.json
 
       # - name: Snyk Open Source monitor
       #   if: env.found == 'true'
