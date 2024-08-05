@@ -3,6 +3,9 @@ set -e  # Exit on error
 set -u  # Treat unset variables as an error
 set -o pipefail  # Catch errors in pipelines
 
+echo "1st argument: $1"
+echo "Number of arguments: $#"
+
 # snyk test --json > snyk-report.json || true
 snyk test --org=security-sandbox --json > snyk-test-report.json || true
 

@@ -5,7 +5,7 @@ inputs:
     description: 'The snyk command to run (e.g., test or monitor)'
     required: true
     default: "test"
-  snyk_args:
+  args:
     description: 'Additional arguments to pass to the snyk command (eg: --json)'
     required: false
     default: "--json"
@@ -15,7 +15,7 @@ runs:
   image: 'Dockerfile'
   args:
   - ${{ inputs.snyk_command }}
-  - ${{ inputs.snyk_args }}
+  - ${{ inputs.args }}
   entrypoint: ["entrypoint.sh"]
   
   
