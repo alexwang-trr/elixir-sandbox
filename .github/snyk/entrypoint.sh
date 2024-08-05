@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eux
 
 
 
@@ -14,11 +14,6 @@ fi
 # set SYNK Token
 export SNYK_TOKEN="${SNYK_TOKEN}"
 
-# Remove the first argument (command) from the list
-shift
-
 # Run the snyk command with the remaining arguments
 snyk test --json > snyk-report.json
 
-# Optionally set the output path as an environment variable
-echo "snyk-report-path=snyk-report.json" >> $GITHUB_ENV
