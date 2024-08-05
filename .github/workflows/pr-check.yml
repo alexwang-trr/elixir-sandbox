@@ -88,7 +88,6 @@ jobs:
                     <th>ID</th>
                     <th>Title</th>
                     <th>CVSSv3</th>
-                    <th>Credit</th>
                     <th>Semver</th>
                     <th>Exploit</th>
                     <th>Fixed In</th>
@@ -106,7 +105,6 @@ jobs:
                   <td>${vuln.id}</td>
                   <td>${vuln.title}</td>
                   <td>${vuln.CVSSv3 || ''}</td>
-                  <td>${vuln.credit ? vuln.credit.join(', ') : ''}</td>
                   <td>${vuln.semver ? vuln.semver.vulnerable.join(', ') : ''}</td>
                   <td>${vuln.exploit || ''}</td>
                   <td>${vuln.fixedIn ? vuln.fixedIn.join(', ') : ''}</td>
