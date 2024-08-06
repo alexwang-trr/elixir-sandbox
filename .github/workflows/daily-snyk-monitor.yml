@@ -21,6 +21,12 @@ jobs:
           repository: ${{ matrix.repo }}
           token: ${{ secrets.TOKEN_GITHUB }}
           fetch-depth: 0
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.12' # Specify the version of Elixir you need
+
       - uses: snyk/actions/setup@master
       - name: Set up Snyk CLI
         run: |
