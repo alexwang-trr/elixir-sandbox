@@ -22,7 +22,17 @@ jobs:
           token: ${{ secrets.TOKEN_GITHUB }}
           fetch-depth: 0
 
+      - name: Check for Elixir files
+        id: check-elixir
+        run: |
+          if ls *.ex* 1> /dev/null 2>&1; then
+            echo "found=true" >> $GITHUB_ENV
+          else
+            echo "found=false" >> $GITHUB_ENV
+          fi
+
       - name: Set up Elixir
+        if: env.found == 'true'
         uses: erlef/setup-beam@v1
         with:
             otp-version: '27'
