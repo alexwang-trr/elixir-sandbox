@@ -12,7 +12,8 @@ jobs:
       matrix:
         repo: [
           'alexwang-trr/elixir-sandbox',
-          'alexwang-trr/spring-boot-hello-world'
+          'alexwang-trr/spring-boot-hello-world',
+          'trr-infosec-sandbox/elixir-testing-neeraj'
         ]
     steps:
       - name: Checkout Repository
