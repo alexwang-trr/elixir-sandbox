@@ -21,16 +21,9 @@ jobs:
           repository: ${{ matrix.repo }}
           token: ${{ secrets.TOKEN_GITHUB }}
           fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install Dependencies
-        run: pip install snyk
-
-      - name: Run Snyk Monitor
+      - uses: snyk/actions/setup@master
+      - name: Set up Snyk CLI
+        run: |
+            snyk monitor --org=security-sandbox
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: snyk monitor --org=security-sandbox
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
