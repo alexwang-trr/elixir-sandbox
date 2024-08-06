@@ -1,9 +1,9 @@
 name: Snyk Monitor Repositories
 
 on:
-  schedule:
-    - cron: '0 0 * * 0' # Runs every Sunday at midnight
-  workflow_dispatch: # Allows manual triggering
+  push:
+    branches:
+      - main
 
 jobs:
   snyk-monitor:
