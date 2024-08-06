@@ -11,8 +11,8 @@ jobs:
     strategy:
       matrix:
         repo: [
-          'alexwang-trr/elixir-sandbox.git',
-          'alexwang-trr/spring-boot-hello-world.git'
+          'alexwang-trr/elixir-sandbox',
+          'alexwang-trr/spring-boot-hello-world'
         ]
     steps:
       - name: Checkout Repository
