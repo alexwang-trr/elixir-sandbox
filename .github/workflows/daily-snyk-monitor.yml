@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run Snyk Monitor
-        uses: ./elixir-sandbox/.github/snyk
+        uses: alexwang-trr/elixir-sandbox/.github/snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
