@@ -1,0 +1,33 @@
+name: Snyk Monitor Repositories
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Runs every Sunday at midnight
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  snyk-monitor:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: [
+          'https://github.com/alexwang-trr/elixir-sandbox.git',
+          'https://github.com/alexwang-trr/spring-boot-hello-world.git'
+        ]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ matrix.repo }}
+          token: ${{ secrets.TOKEN_GITHUB }}
+          fetch-depth: 0
+
+      - name: Run Snyk Monitor
+        if: env.found == 'true'
+        uses: ./.github/snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
+          args: --org=security-sandbox
+        continue-on-error: true
