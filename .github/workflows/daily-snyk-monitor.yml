@@ -23,7 +23,6 @@ jobs:
           fetch-depth: 0
 
       - name: Run Snyk Monitor
-        if: env.found == 'true'
         uses: ./.github/snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
