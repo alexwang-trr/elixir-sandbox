@@ -22,11 +22,15 @@ jobs:
           token: ${{ secrets.TOKEN_GITHUB }}
           fetch-depth: 0
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: pip install snyk
+
       - name: Run Snyk Monitor
-        uses: alexwang-trr/elixir-sandbox/.github/snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
-          args: --org=security-sandbox
-        continue-on-error: true
+        run: snyk monitor --org=security-sandbox
