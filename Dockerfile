@@ -1,5 +1,5 @@
-# FROM elixir:1.17
-FROM hexpm/elixir:1.14.5-erlang-24.3.4-alpine-3.18.0 as build
+# Use an ARM64 compatible Elixir image with version 1.17
+FROM elixir:1.17-alpine as build
 
 # Install Hex + Rebar
 RUN mix local.hex --force && \
